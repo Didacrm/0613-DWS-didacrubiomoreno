@@ -10,7 +10,7 @@ $edat = (int) $edat_str;
 $suma = $edat + $nota_float;
 
 $edat_com_string = strval($edat);
-$nota_com_int = intval($nota_float)
+$nota_com_int = intval($nota_float);
 
 $suma_implicita = $edat_str + $nota_float;
 
