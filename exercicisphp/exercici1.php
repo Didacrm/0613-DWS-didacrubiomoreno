@@ -36,3 +36,24 @@ $suma_implicita = $edat_str + $nota_float;
     <?php } else { ?>
         <p>L'alumne ha suspès.</p>
     <?php } ?>
+
+   <h2>Conversions de tipus</h2>
+    <p>
+        Edat original: "<?php echo $edat_str; ?>" (<?php echo gettype($edat_str); ?>)
+        → <?php echo $edat; ?> (<?php echo gettype($edat); ?>)
+
+        </p>
+    <p>
+        Edat convertida a string amb strval(): "<?php echo $edat_com_string; ?>"
+        (<?php echo gettype($edat_com_string); ?>)
+    </p>
+    <p>
+        Nota convertida a integer amb intval(): <?php echo $nota_com_int; ?>
+        (<?php echo gettype($nota_com_int); ?>)
+    </p>
+    <p>
+        Conversió implícita ("20" + 8.5): <?php echo $suma_implicita; ?>
+        (<?php echo gettype($suma_implicita); ?>)
+    </p>
+</body>
+</html>
