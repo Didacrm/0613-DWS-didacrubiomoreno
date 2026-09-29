@@ -1,6 +1,7 @@
 <?php
 
 
+
 function esMajorEdat($edat) {
     return $edat >= 18;
 }
@@ -11,6 +12,18 @@ function mitjana($notes) {
         $suma += $n;
     }
     return $suma / count($notes);
+}
+
+function qualificacio($mitjana) {
+    if ($mitjana < 5) {
+        return "Suspès";
+    } elseif ($mitjana < 7) {
+        return "Aprovat";
+    } elseif ($mitjana < 9) {
+        return "Notable";
+    } else {
+        return "Excel·lent";
+    }
 }
 
 
@@ -28,15 +41,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if ($nom === "") {
         $errors[] = "El nom no pot estar buit.";
     }
+
     if ($edat === "") {
         $errors[] = "L'edat no pot estar buida.";
-    } elseif (!is_numeric($edat) || (int)$edat < 0) {
-        $errors[] = "L'edat ha de ser un número positiu.";
+    } elseif (filter_var($edat, FILTER_VALIDATE_INT, ["options" => ["min_range" => 0, "max_range" => 120]]) === false) {
+        $errors[] = "L'edat ha de ser un número enter entre 0 i 120.";
     }
+
     if ($numero === "") {
         $errors[] = "El número no pot estar buit.";
-    } elseif (!is_numeric($numero) || (int)$numero < 1 || (int)$numero > 10) {
-        $errors[] = "El número ha d'estar entre 1 i 10.";
+    } elseif (filter_var($numero, FILTER_VALIDATE_INT, ["options" => ["min_range" => 1, "max_range" => 10]]) === false) {
+        $errors[] = "El número ha de ser un enter entre 1 i 10.";
     }
 
     if (count($errors) == 0) {
@@ -46,7 +61,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 }
 
-$notes = [6, 7.5, 8];
+$notes = [
+    "Matemàtiques" => 6,
+    "Català"       => 7.5,
+    "Anglès"       => 8
+];
 ?>
 <!DOCTYPE html>
 <html lang="ca">
@@ -70,7 +89,7 @@ $notes = [6, 7.5, 8];
             <input type="text" name="nom" value="<?php echo htmlspecialchars($nom); ?>">
         </label>
         <label>Edat:
-            <input type="number" name="edat" min="0" value="<?php echo htmlspecialchars($edat); ?>">
+            <input type="number" name="edat" min="0" max="120" value="<?php echo htmlspecialchars($edat); ?>">
         </label>
         <label>Número (1-10):
             <input type="number" name="numero" min="1" max="10" value="<?php echo htmlspecialchars($numero); ?>">
@@ -115,19 +134,16 @@ $notes = [6, 7.5, 8];
             </p>
 
             <h2>Notes</h2>
-            <p>Les notes són:
-                <?php
-                $primera = true;
-                foreach ($notes as $n) {
-                    if (!$primera) {
-                        echo ", ";
-                    }
-                    echo $n;
-                    $primera = false;
-                }
-                ?>
-            </p>
-            <p>La mitjana de les notes és: <?php echo number_format(mitjana($notes), 2); ?></p>
+            <p>Les notes són:</p>
+            <ul>
+                <?php foreach ($notes as $assignatura => $n) { ?>
+                    <li><?php echo "$assignatura: $n"; ?></li>
+                <?php } ?>
+            </ul>
+
+            <?php $mitjanaNotes = mitjana($notes); ?>
+            <p>La mitjana de les notes és: <?php echo number_format($mitjanaNotes, 2); ?>
+               (<?php echo qualificacio($mitjanaNotes); ?>)</p>
         </div>
     <?php } ?>
 </body>
